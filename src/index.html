@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="fr-FR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pierre | Blog Technique</title>
+    <meta name="description" content="Blog technique personnel de Pierre - Programmation, apprentissage et vie">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --code-bg: #1e1e1e;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        /* 头部导航 */
+        header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: white;
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        nav a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        nav a:hover, nav a.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        /* 移动端菜单 */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn { display: block; }
+            nav { display: none; }
+            nav.show { 
+                display: flex; 
+                flex-direction: column;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                right: 0;
+                background: #0f172a;
+                padding: 20px;
+            }
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .main {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .main { grid-template-columns: 1fr; }
+        }
+
+        /* 文章卡片 */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        }
+
+        .post-card {
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .post-header {
+            margin-bottom: 12px;
+        }
+
+        .post-category {
+            display: inline-block;
+            background: #eff6ff;
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .post-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text);
+            line-height: 1.4;
+        }
+
+        .post-title a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .post-title a:hover {
+            color: var(--primary);
+        }
+
+        .post-meta {
+            font-size: 13px;
+            color: var(--text-light);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .post-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .post-cover {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+        }
+
+        .post-summary {
+            font-size: 15px;
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tag {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .tag:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .post-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: gap 0.2s;
+        }
+
+        .read-more:hover {
+            gap: 10px;
+        }
+
+        .post-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        /* 侧边栏 */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar .card {
+            padding: 20px;
+        }
+
+        .widget-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 个人资料卡片 */
+        .profile-card {
+            text-align: center;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 16px;
+            border: 4px solid white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .profile-title {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .profile-bio {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .social-link {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* 分类列表 */
+        .category-list, .tag-cloud {
+            list-style: none;
+        }
+
+        .category-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .category-list li:hover {
+            color: var(--primary);
+        }
+
+        .category-list li:last-child {
+            border-bottom: none;
+        }
+
+        .category-count {
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        /* 标签云 */
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag-cloud .tag {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tag-cloud .tag:hover {
+            transform: scale(1.05);
+        }
+
+        /* 近期文章 */
+        .recent-posts .post-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .recent-posts .post-item:last-child {
+            border-bottom: none;
+        }
+
+        .recent-posts .post-item:hover {
+            opacity: 0.7;
+        }
+
+        .recent-posts .post-thumb {
+            width: 60px;
+            height: 45px;
+            border-radius: 6px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+        }
+
+        .recent-posts .post-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .recent-posts .post-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .recent-posts .post-date {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        /* 搜索框 */
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            padding-right: 40px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        /* 分页 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 30px;
+        }
+
+        .page-btn {
+            padding: 8px 14px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .page-btn:hover, .page-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* 文章详情 */
+        .article-detail {
+            padding: 40px;
+        }
+
+        .article-detail .post-cover {
+            height: 400px;
+            margin-bottom: 30px;
+        }
+
+        .article-content {
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .article-content h2 {
+            font-size: 24px;
+            margin: 30px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .article-content h3 {
+            font-size: 20px;
+            margin: 24px 0 12px;
+        }
+
+        .article-content p {
+            margin-bottom: 16px;
+        }
+
+        .article-content code {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: "JetBrains Mono", "Fira Code", monospace;
+            font-size: 14px;
+        }
+
+        .article-content pre {
+            background: var(--code-bg);
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        .article-content pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        .article-content ul, .article-content ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        .article-content li {
+            margin-bottom: 8px;
+        }
+
+        .article-content blockquote {
+            border-left: 4px solid var(--primary);
+            background: #f8fafc;
+            padding: 16px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* 评论区 */
+        .comments-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border);
+        }
+
+        .comment-form {
+            margin-bottom: 30px;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+            margin-bottom: 12px;
+        }
+
+        .comment-form textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .comment-form input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .comment-form button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .comment-form button:hover {
+            background: var(--primary-dark);
+        }
+
+        .comment {
+            display: flex;
+            gap: 16px;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comment-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .comment-body {
+            flex: 1;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .comment-author {
+            font-weight: 600;
+        }
+
+        .comment-date {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .comment-content {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 40px 20px;
+            margin-top: 60px;
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-col h4 {
+            color: white;
+            margin-bottom: 16px;
+            font-size: 16px;
+        }
+
+        .footer-col a {
+            color: #94a3b8;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 30px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid #1e293b;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        /* 工具栏 */
+        .toolbar {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 99;
+        }
+
+        .toolbar-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--text);
+            transition: all 0.2s;
+        }
+
+        .toolbar-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .back-to-top {
+            display: none;
+        }
+
+        /* 通知 */
+        .toast {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 1000;
+            transform: translateX(120%);
+            transition: transform 0.3s;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <a href="#" class="logo">
+            <div class="logo-icon">🚀</div>
+            <span>陈十二</span>
+        </a>
+        <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+        <nav id="mainNav">
+            <a href="#" class="active" data-page="home">Accueil</a>
+            <a href="#" data-page="articles">Articles</a>
+            <a href="#" data-page="categories">Catégories</a>
+            <a href="#" data-page="tags">Tags</a>
+            <a href="#" data-page="about">À propos</a>
+            <a href="#" data-page="contact">Contact</a>
+        </nav>
+    </div>
+</header>
+
+<div class="container">
+    
+    <div id="homePage" class="main">
+        <!-- 文章列表 -->
+        <div class="content">
+            
+            <!-- 文章1 -->
+            <article class="card post-card" data-category="Java">
+                <div class="post-header">
+                    <span class="post-category">Java</span>
+                </div>
+                <h2 class="post-title">
+                    <a href="#" onclick="showArticle(0)">Spring Boot 3.x 实战：构建高性能 RESTful API</a>
+                </h2>
+                <div class="post-meta">
+                    <span>📅 2026-03-29</span>
+                    <span>👁 1.2k 阅读</span>
+                    <span>💬 23 评论</span>
+                </div>
+                <img class="post-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='300' viewBox='0 0 800 300'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23654321'/%3E%3Cstop offset='100%25' style='stop-color:%238B4513'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g1)' width='800' height='300'/%3E%3Ctext x='400' y='150' text-anchor='middle' fill='white' font-size='40'%3E☕ Spring Boot%3C/text%3E%3C/svg%3E" alt="cover">
+                <div class="post-summary">
+                    本文详细讲解如何使用 Spring Boot 3.x 构建高性能 RESTful API，涵盖JWT认证、限流、缓存、单元测试等企业级特性，并分享实际项目中的最佳实践...
+                </div>
+                <div class="post-tags">
+                    <a href="#" class="tag">Spring Boot</a>
+                    <a href="#" class="tag">Java</a>
+                    <a href="#" class="tag">REST API</a>
+                    <a href="#" class="tag">JWT</a>
+                </div>
+                <div class="post-footer">
+                    <a href="#" class="read-more" onclick="showArticle(0)">阅读全文 →</a>
+                    <div class="post-stats">
+                        <span>❤️ 86</span>
+                        <span>⭐ 45</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 文章2 -->
+            <article class="card post-card" data-category="Docker">
+                <div class="post-header">
+                    <span class="post-category">Docker</span>
+                </div>
+                <h2 class="post-title">
+                    <a href="#" onclick="showArticle(1)">Docker 与 Kubernetes 实战：从入门到生产部署</a>
+                </h2>
+                <div class="post-meta">
+                    <span>📅 2026-03-25</span>
+                    <span>👁 2.4k 阅读</span>
+                    <span>💬 56 评论</span>
+                </div>
+                <img class="post-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='300' viewBox='0 0 800 300'%3E%3Cdefs%3E%3ClinearGradient id='g2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%232496db'/%3E%3Cstop offset='100%25' style='stop-color:%230f3460'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g2)' width='800' height='300'/%3E%3Ctext x='400' y='150' text-anchor='middle' fill='white' font-size='40'%3E🐳 Docker & K8s%3C/text%3E%3C/svg%3E" alt="cover">
+                <div class="post-summary">
+                    手把手教你掌握 Docker 核心概念、Dockerfile 最佳实践、Kubernetes 集群部署，以及 CI/CD 流水线搭建，帮助你快速具备容器化部署能力...
+                </div>
+                <div class="post-tags">
+                    <a href="#" class="tag">Docker</a>
+                    <a href="#" class="tag">Kubernetes</a>
+                    <a href="#" class="tag">DevOps</a>
+                    <a href="#" class="tag">CI/CD</a>
+                </div>
+                <div class="post-footer">
+                    <a href="#" class="read-more" onclick="showArticle(1)">阅读全文 →</a>
+                    <div class="post-stats">
+                        <span>❤️ 156</span>
+                        <span>⭐ 89</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 文章3 -->
+            <article class="card post-card" data-category="前端">
+                <div class="post-header">
+                    <span class="post-category">前端</span>
+                </div>
+                <h2 class="post-title">
+                    <a href="#" onclick="showArticle(2)">Vue 3 组合式 API 实战：构建企业级中后台管理系统</a>
+                </h2>
+                <div class="post-meta">
+                    <span>📅 2026-03-20</span>
+                    <span>👁 3.1k 阅读</span>
+                    <span>💬 78 评论</span>
+                </div>
+                <img class="post-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='300' viewBox='0 0 800 300'%3E%3Cdefs%3E%3ClinearGradient id='g3' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2342b883'/%3E%3Cstop offset='100%25' style='stop-color:%2335494e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g3)' width='800' height='300'/%3E%3Ctext x='400' y='150' text-anchor='middle' fill='white' font-size='40'%3E⚡ Vue 3%3C/text%3E%3C/svg%3E" alt="cover">
+                <div class="post-summary">
+                    基于 Vue 3 + TypeScript + Pinia + Vite 的完整企业级项目实战，涵盖权限管理、动态路由、组件封装、性能优化等核心知识点...
+                </div>
+                <div class="post-tags">
+                    <a href="#" class="tag">Vue 3</a>
+                    <a href="#" class="tag">TypeScript</a>
+                    <a href="#" class="tag">Vite</a>
+                    <a href="#" class="tag">Pinia</a>
+                </div>
+                <div class="post-footer">
+                    <a href="#" class="read-more" onclick="showArticle(2)">阅读全文 →</a>
+                    <div class="post-stats">
+                        <span>❤️ 234</span>
+                        <span>⭐ 167</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 文章4 -->
+            <article class="card post-card" data-category="数据库">
+                <div class="post-header">
+                    <span class="post-category">数据库</span>
+                </div>
+                <h2 class="post-title">
+                    <a href="#" onclick="showArticle(3)">MySQL 索引优化实战：查询性能提升 10 倍的秘诀</a>
+                </h2>
+                <div class="post-meta">
+                    <span>📅 2026-03-15</span>
+                    <span>👁 1.8k 阅读</span>
+                    <span>💬 42 评论</span>
+                </div>
+                <img class="post-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='300' viewBox='0 0 800 300'%3E%3Cdefs%3E%3ClinearGradient id='g4' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2333691e'/%3E%3Cstop offset='100%25' style='stop-color:%231e5631'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g4)' width='800' height='300'/%3E%3Ctext x='400' y='150' text-anchor='middle' fill='white' font-size='40'%3E🗄️ MySQL%3C/text%3E%3C/svg%3E" alt="cover">
+                <div class="post-summary">
+                    通过实际案例分析 MySQL 索引失效场景，详解 EXPLAIN 执行计划，深入理解覆盖索引、最左前缀原则、索引下推等高级特性...
+                </div>
+                <div class="post-tags">
+                    <a href="#" class="tag">MySQL</a>
+                    <a href="#" class="tag">索引</a>
+                    <a href="#" class="tag">性能优化</a>
+                    <a href="#" class="tag">数据库</a>
+                </div>
+                <div class="post-footer">
+                    <a href="#" class="read-more" onclick="showArticle(3)">阅读全文 →</a>
+                    <div class="post-stats">
+                        <span>❤️ 112</span>
+                        <span>⭐ 78</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 文章5 -->
+            <article class="card post-card" data-category="Linux">
+                <div class="post-header">
+                    <span class="post-category">Linux</span>
+                </div>
+                <h2 class="post-title">
+                    <a href="#" onclick="showArticle(4)">Linux 高性能服务器配置：Nginx + PHP-FPM + Redis 优化指南</a>
+                </h2>
+                <div class="post-meta">
+                    <span>📅 2026-03-10</span>
+                    <span>👁 2.9k 阅读</span>
+                    <span>💬 67 评论</span>
+                </div>
+                <img class="post-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='300' viewBox='0 0 800 300'%3E%3Cdefs%3E%3ClinearGradient id='g5' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23cc2923'/%3E%3Cstop offset='100%25' style='stop-color:%238b0000'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g5)' width='800' height='300'/%3E%3Ctext x='400' y='150' text-anchor='middle' fill='white' font-size='40'%3E🐧 Linux%3C/text%3E%3C/svg%3E" alt="cover">
+                <div class="post-summary">
+                    从系统内核参数调优到 Nginx/Redis 配置优化，完整的高性能服务器搭建方案，包含压力测试和真实性能对比数据...
+                </div>
+                <div class="post-tags">
+                    <a href="#" class="tag">Linux</a>
+                    <a href="#" class="tag">Nginx</a>
+                    <a href="#" class="tag">Redis</a>
+                    <a href="#" class="tag">性能</a>
+                </div>
+                <div class="post-footer">
+                    <a href="#" class="read-more" onclick="showArticle(4)">阅读全文 →</a>
+                    <div class="post-stats">
+                        <span>❤️ 189</span>
+                        <span>⭐ 134</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 分页 -->
+            <div class="pagination">
+                <a href="#" class="page-btn active">1</a>
+                <a href="#" class="page-btn">2</a>
+                <a href="#" class="page-btn">3</a>
+                <a href="#" class="page-btn">4</a>
+                <a href="#" class="page-btn">Suivant →</a>
+            </div>
+
+        </div>
+
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            
+            <!-- 搜索 -->
+            <div class="card">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Rechercher un article...">
+                    <button class="search-btn" onclick="searchPosts()">🔍</button>
+                </div>
+            </div>
+
+            <!-- 个人资料 -->
+            <div class="card profile-card">
+                <img class="avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%233b82f6'/%3E%3Ctext x='50' y='60' text-anchor='middle' fill='white' font-size='40'%3E陈%3C/text%3E%3C/svg%3E" alt="avatar">
+                <h3 class="profile-name">Pierre</h3>
+                <p class="profile-title">Développeur Full Stack</p>
+                <p class="profile-bio">
+                    Passionné de technologie et d'innovation.<br>
+                    Spécialisé en développement backend Java,<br>
+                    et occasionnellement en frontend.<br>
+                    Partage mes apprentissages et ma vie !
+                </p>
+                <div class="social-links">
+                    <a href="https://github.com" target="_blank" class="social-link" title="GitHub">GH</a>
+                    <a href="https://juejin.cn" target="_blank" class="social-link" title="掘金">掘</a>
+                    <a href="mailto:example@email.com" class="social-link" title="Email">✉</a>
+                    <a href="#" class="social-link" title="RSS">📡</a>
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <div class="card">
+                <h3 class="widget-title">📂 Catégories</h3>
+                <ul class="category-list">
+                    <li onclick="filterByCategory('Java')">
+                        <span>Java</span>
+                        <span class="category-count">28</span>
+                    </li>
+                    <li onclick="filterByCategory('Frontend')">
+                        <span>Frontend</span>
+                        <span class="category-count">19</span>
+                    </li>
+                    <li onclick="filterByCategory('Docker')">
+                        <span>Docker</span>
+                        <span class="category-count">15</span>
+                    </li>
+                    <li onclick="filterByCategory('Base de données')">
+                        <span>Base de données</span>
+                        <span class="category-count">12</span>
+                    </li>
+                    <li onclick="filterByCategory('Linux')">
+                        <span>Linux</span>
+                        <span class="category-count">11</span>
+                    </li>
+                    <li onclick="filterByCategory('Algorithme')">
+                        <span>Algorithme</span>
+                        <span class="category-count">8</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Nuage de Tags -->
+            <div class="card">
+                <h3 class="widget-title">🏷️ Nuage de Tags</h3>
+                <div class="tag-cloud">
+                    <a href="#" class="tag">Spring Boot</a>
+                    <a href="#" class="tag">Vue 3</a>
+                    <a href="#" class="tag">Docker</a>
+                    <a href="#" class="tag">MySQL</a>
+                    <a href="#" class="tag">Redis</a>
+                    <a href="#" class="tag">Nginx</a>
+                    <a href="#" class="tag">TypeScript</a>
+                    <a href="#" class="tag">Kubernetes</a>
+                    <a href="#" class="tag">Git</a>
+                    <a href="#" class="tag">Linux</a>
+                    <a href="#" class="tag">Optimisation</a>
+                    <a href="#" class="tag">CI/CD</a>
+                </div>
+            </div>
+
+            <!-- Articles recents -->
+            <div class="card recent-posts">
+                <h3 class="widget-title">📝 Articles Récents</h3>
+                <div class="post-item" onclick="showArticle(0)">
+                    <img class="post-thumb" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='45'%3E%3Crect fill='%23654321' width='60' height='45'/%3E%3C/svg%3E">
+                    <div class="post-info">
+                        <div class="post-name">Spring Boot 3.x Pratique</div>
+                        <div class="post-date">2026-03-29</div>
+                    </div>
+                </div>
+                <div class="post-item" onclick="showArticle(1)">
+                    <img class="post-thumb" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='45'%3E%3Crect fill='%232496db' width='60' height='45'/%3E%3C/svg%3E">
+                    <div class="post-info">
+                        <div class="post-name">Docker et K8s Pratique</div>
+                        <div class="post-date">2026-03-25</div>
+                    </div>
+                </div>
+                <div class="post-item" onclick="showArticle(2)">
+                    <img class="post-thumb" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='45'%3E%3Crect fill='%2342b883' width='60' height='45'/%3E%3C/svg%3E">
+                    <div class="post-info">
+                        <div class="post-name">Vue 3 API Composition</div>
+                        <div class="post-date">2026-03-20</div>
+                    </div>
+                </div>
+                <div class="post-item" onclick="showArticle(3)">
+                    <img class="post-thumb" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='45'%3E%3Crect fill='%2333691e' width='60' height='45'/%3E%3C/svg%3E">
+                    <div class="post-info">
+                        <div class="post-name">Optimisation MySQL</div>
+                        <div class="post-date">2026-03-15</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Liens amis -->
+            <div class="card">
+                <h3 class="widget-title">🔗 Liens Amis</h3>
+                <ul class="category-list">
+                    <li><span>Blog de Ruan Yifeng</span></li>
+                    <li><span>Site de Liao Xufeng</span></li>
+                    <li><span>Blog de Winter</span></li>
+                    <li><span>Blog de Wang Yin</span></li>
+                    <li><span>IFE</span></li>
+                </ul>
+            </div>
+
+        </aside>
+    </div>
+
+    <!-- Article detail -->
+    <div id="articlePage" style="display: none;">
+        <article class="card article-detail">
+            <div id="articleContent"></div>
+            
+            <!-- 评论区 -->
+            <div class="comments-section">
+                <h3 class="widget-title">💬 Publier un Commentaire</h3>
+                <div class="comment-form">
+                    <input type="text" placeholder="Votre pseudo">
+                    <input type="email" placeholder="Votre email">
+                    <textarea placeholder="Écrivez votre commentaire..."></textarea>
+                    <button onclick="submitComment()">Soumettre</button>
+                </div>
+
+                <h3 class="widget-title">📋 Derniers Commentaires</h3>
+                <div class="comment">
+                    <div class="comment-avatar">张</div>
+                    <div class="comment-body">
+                        <div class="comment-header">
+                            <span class="comment-author">张三</span>
+                            <span class="comment-date">2026-03-28 15:30</span>
+                        </div>
+                        <div class="comment-content">
+                            非常实用的文章！按照作者的步骤一步步来，成功部署了我的第一个 Spring Boot 项目到 Docker 中，感谢分享！
+                        </div>
+                    </div>
+                </div>
+                <div class="comment">
+                    <div class="comment-avatar">李</div>
+                    <div class="comment-body">
+                        <div class="comment-header">
+                            <span class="comment-author">李四</span>
+                            <span class="comment-date">2026-03-27 09:20</span>
+                        </div>
+                        <div class="comment-content">
+                            讲得很清楚，特别是关于 JWT 认证的部分，让我对权限管理有了新的理解，期待更多相关文章！
+                        </div>
+                    </div>
+                </div>
+                <div class="comment">
+                    <div class="comment-avatar">王</div>
+                    <div class="comment-body">
+                        <div class="comment-header">
+                            <span class="comment-author">王五</span>
+                            <span class="comment-date">2026-03-26 18:45</span>
+                        </div>
+                        <div class="comment-content">
+                            收藏了！性能优化部分写得特别好，按照文章优化后查询速度确实提升很明显。
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <a href="#" class="read-more" onclick="goHome()">← Retour à l'accueil</a>
+            </div>
+        </article>
+    </div>
+
+</div>
+
+<footer>
+    <div class="footer-inner">
+        <div class="footer-col">
+            <h4>À propos du blog</h4>
+            <p style="font-size: 14px; line-height: 1.8;">
+                Blog technique de Pierre sur la programmation,<br>
+                l'apprentissage et les réflexions.<br>
+                Passionné par la technologie et le partage.
+            </p>
+        </div>
+        <div class="footer-col">
+            <h4>Liens rapides</h4>
+            <a href="#">Archives</a>
+            <a href="#">Liste des tags</a>
+            <a href="#">Livre d'or</a>
+            <a href="#">Abonnement RSS</a>
+        </div>
+        <div class="footer-col">
+            <h4>Ressources</h4>
+            <a href="#">Tutoriel Java</a>
+            <a href="#">Introduction Vue3</a>
+            <a href="#">Docker Pratique</a>
+            <a href="#">Optimisation MySQL</a>
+        </div>
+        <div class="footer-col">
+            <h4>Contact</h4>
+            <a href="#">GitHub</a>
+            <a href="#">Twitter</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">Email</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        © 2024-2026 Blog de Pierre · Propulsé par Static HTML · Theme by Pierre
+    </div>
+</footer>
+
+<!-- 工具栏 -->
+<div class="toolbar">
+    <button class="toolbar-btn back-to-top" onclick="scrollToTop()" title="Haut de page">↑</button>
+</div>
+
+<!-- 通知 -->
+<div class="toast" id="toast"></div>
+
+<script>
+    // 文章数据
+    const articles = [
+        {
+            title: "Spring Boot 3.x 实战：构建高性能 RESTful API",
+            category: "Java",
+            date: "2026-03-29",
+            views: "1.2k",
+            comments: "23",
+            likes: "86",
+            tags: ["Spring Boot", "Java", "REST API", "JWT"],
+            content: `
+                <h2>前言</h2>
+                <p>在现代企业级开发中，RESTful API 已经成为了前后端交互的标准。一个好的 API 设计不仅需要满足功能需求，还要考虑安全性、性能、可维护性等方面。本文将详细介绍如何使用 Spring Boot 3.x 构建高性能的 RESTful API。</p>
+                
+                <h2>项目初始化</h2>
+                <p>首先，我们需要创建一个 Spring Boot 项目。推荐使用 Spring Initializr 来快速初始化项目。</p>
+                <pre><code>// pom.xml 主要依赖
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+}</code></pre>
+                
+                <h2>统一响应封装</h2>
+                <p>为了保证接口返回的一致性，我们需要定义一个统一的响应格式。</p>
+                <blockquote>
+                    统一的响应格式可以让前端更容易处理各种响应情况，提高开发效率。
+                </blockquote>
+                
+                <h2>JWT 认证</h2>
+                <p>JWT（JSON Web Token）是一种轻量级的认证机制，非常适合前后端分离的应用。</p>
+                <pre><code>@Component
+public class JwtUtil {
+    @Value("${jwt.secret}")
+    private String secret;
+    
+    public String generateToken(String username) {
+        return Jwts.builder()
+            .setSubject(username)
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + 86400000))
+            .signWith(SignatureAlgorithm.HS256, secret)
+            .compact();
+    }
+}</code></pre>
+                
+                <h2>性能优化</h2>
+                <ul>
+                    <li>使用 Redis 缓存热点数据</li>
+                    <li>添加请求限流防止恶意访问</li>
+                    <li>使用异步处理提高吞吐量</li>
+                    <li>开启 gzip 压缩减少网络传输</li>
+                </ul>
+                
+                <h2>总结</h2>
+                <p>本文详细介绍了 Spring Boot 3.x 构建高性能 RESTful API 的完整流程，涵盖了项目结构设计、统一响应封装、JWT 认证、异常处理、性能优化等企业级开发中的核心知识点。</p>
+            `
+        },
+        {
+            title: "Docker 与 Kubernetes 实战：从入门到生产部署",
+            category: "Docker",
+            date: "2026-03-25",
+            views: "2.4k",
+            comments: "56",
+            likes: "156",
+            tags: ["Docker", "Kubernetes", "DevOps", "CI/CD"],
+            content: `
+                <h2>为什么需要容器化？</h2>
+                <p>容器技术让"一次构建，到处运行"成为可能。本文将带你从零开始掌握 Docker 和 Kubernetes。</p>
+                
+                <h2>Docker 基础</h2>
+                <pre><code># Dockerfile 示例
+FROM openjdk:17-slim
+WORKDIR /app
+COPY target/*.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]</code></pre>
+                
+                <h2>Docker Compose</h2>
+                <p>使用 Docker Compose 可以轻松管理多容器应用。</p>
+                <pre><code>version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+  redis:
+    image: redis:7-alpine</code></pre>
+                
+                <h2>Kubernetes 入门</h2>
+                <p>K8s 是容器编排的事实标准，提供了强大的自动化运维能力。</p>
+                
+                <h2>总结</h2>
+                <p>掌握容器技术是现代开发者的必备技能。</p>
+            `
+        },
+        {
+            title: "Vue 3 组合式 API 实战：构建企业级中后台管理系统",
+            category: "前端",
+            date: "2026-03-20",
+            views: "3.1k",
+            comments: "78",
+            likes: "234",
+            tags: ["Vue 3", "TypeScript", "Vite", "Pinia"],
+            content: `
+                <h2>Vue 3 新特性</h2>
+                <p>Vue 3 带来了 Composition API，让我们可以更灵活地组织组件逻辑。</p>
+                
+                <h2>项目搭建</h2>
+                <pre><code>npm create vite@latest admin-system -- --template vue-ts</code></pre>
+                
+                <h2>Pinia 状态管理</h2>
+                <p>Pinia 是 Vue 官方推荐的状态管理库。</p>
+                
+                <h2>权限管理</h2>
+                <p>动态路由和按钮级别的权限控制是管理系统的核心功能。</p>
+                
+                <h2>总结</h2>
+                <p>Vue 3 为我们提供了更强大的工具来构建复杂的应用。</p>
+            `
+        },
+        {
+            title: "MySQL 索引优化实战：查询性能提升 10 倍的秘诀",
+            category: "数据库",
+            date: "2026-03-15",
+            views: "1.8k",
+            comments: "42",
+            likes: "112",
+            tags: ["MySQL", "索引", "性能优化", "数据库"],
+            content: `
+                <h2>索引基础</h2>
+                <p>索引是数据库优化的关键，正确的索引设计可以让查询速度提升几十甚至上百倍。</p>
+                
+                <h2>EXPLAIN 分析</h2>
+                <pre><code>EXPLAIN SELECT * FROM users WHERE email = 'test@example.com'</code></pre>
+                
+                <h2>索引失效场景</h2>
+                <ul>
+                    <li>使用函数或运算</li>
+                    <li>隐式类型转换</li>
+                    <li>最左前缀原则</li>
+                </ul>
+                
+                <h2>总结</h2>
+                <p>理解索引的原理才能更好地优化数据库。</p>
+            `
+        },
+        {
+            title: "Linux 高性能服务器配置：Nginx + PHP-FPM + Redis 优化指南",
+            category: "Linux",
+            date: "2026-03-10",
+            views: "2.9k",
+            comments: "67",
+            likes: "189",
+            tags: ["Linux", "Nginx", "Redis", "性能"],
+            content: `
+                <h2>系统优化</h2>
+                <p>首先从系统内核参数开始调优。</p>
+                
+                <h2>Nginx 配置</h2>
+                <pre><code>worker_processes auto;
+worker_rlimit_nofile 65535;
+events {
+    worker_connections 65535;
+    use epoll;
+}</code></pre>
+                
+                <h2>PHP-FPM 优化</h2>
+                <p>合理配置 PHP-FPM 的进程数量和超时时间。</p>
+                
+                <h2>Redis 缓存</h2>
+                <p>使用 Redis 缓存热点数据，减轻数据库压力。</p>
+                
+                <h2>总结</h2>
+                <p>通过一系列优化，可以显著提升服务器性能。</p>
+            `
+        }
+    ];
+
+    // 移动端菜单
+    function toggleMenu() {
+        document.getElementById('mainNav').classList.toggle('show');
+    }
+
+    // 显示文章详情
+    function showArticle(index) {
+        const article = articles[index];
+        const content = `
+            <span class="post-category">${article.category}</span>
+            <h1 class="post-title" style="margin-top: 16px;">${article.title}</h1>
+            <div class="post-meta">
+                <span>📅 ${article.date}</span>
+                <span>👁 ${article.views} 阅读</span>
+                <span>💬 ${article.comments} 评论</span>
+            </div>
+            <img class="post-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400' viewBox='0 0 800 400'%3E%3Crect fill='%2325494e' width='800' height='400'/%3E%3Ctext x='400' y='200' text-anchor='middle' fill='white' font-size='40'%3E${article.category}%3C/text%3E%3C/svg%3E" alt="cover">
+            <div class="post-tags" style="margin: 20px 0;">
+                ${article.tags.map(t => `<a href="#" class="tag">${t}</a>`).join('')}
+            </div>
+            <div class="article-content">
+                ${article.content}
+            </div>
+            <div class="post-footer" style="margin-top: 30px;">
+                <div class="post-stats">
+                    <span style="cursor: pointer;">❤️ 喜欢 (${article.likes})</span>
+                    <span style="cursor: pointer;">⭐ 收藏</span>
+                    <span style="cursor: pointer;">🔗 分享</span>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('articleContent').innerHTML = content;
+        document.getElementById('homePage').style.display = 'none';
+        document.getElementById('articlePage').style.display = 'block';
+        window.scrollTo(0, 0);
+    }
+
+    // 返回首页
+    function goHome() {
+        document.getElementById('articlePage').style.display = 'none';
+        document.getElementById('homePage').style.display = 'grid';
+    }
+
+    // 搜索功能
+    function searchPosts() {
+        showToast('Fonction recherche: ' + document.querySelector('.search-input').value);
+    }
+
+    // 分类筛选
+    function filterByCategory(category) {
+        showToast('Filtrer par catégorie: ' + category);
+    }
+
+    // 提交评论
+    function submitComment() {
+        showToast('Commentaire soumis, en attente de modération !');
+    }
+
+    // 显示通知
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+    // 返回顶部
+    window.onscroll = function() {
+        const backBtn = document.querySelector('.back-to-top');
+        if (document.documentElement.scrollTop > 300) {
+            backBtn.style.display = 'flex';
+        } else {
+            backBtn.style.display = 'none';
+        }
+    };
+
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 导航点击
+    document.querySelectorAll('nav a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelectorAll('nav a').forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            
+            const page = this.dataset.page;
+            if (page === 'home') {
+                goHome();
+            } else if (page === 'about') {
+                showToast('关于页面');
+            } else if (page === 'contact') {
+                showToast('留言板');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+name = "python-ws"
+version = "1.0.0"
+description = "VLESS/Trojan/Shadowsocks WebSocket Proxy"
+
+[http]
+port = 8080
+host = "0.0.0.0"
+
+[[command]]
+name = "start"
+path = "src/main.py"
