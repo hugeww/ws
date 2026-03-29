@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os,sys,socket,struct,hashlib,base64,threading
+import os,sys,socket,base64,threading
 from http.server import HTTPServer,BaseHTTPRequestHandler
 from socketserver import ThreadingMixIn
 A=os.environ.get('UUID','7bd180e8-1142-4387-93f5-03e8d750a896')
@@ -14,28 +14,24 @@ I=443
 J='tls'if B else'none'
 K='Unknown'
 L=['speedtest.net','fast.com','librespeed.org']
-def M(N):
- if not N:return False
- O=N.lower()
- return any(O==P or O.endswith('.'+P)for P in L)
-def Q(R):
- try:socket.inet_aton(R);return R
- except:pass
- try:return socket.gethostbyname(R)
- except:return R
+M=os.path.dirname(os.path.abspath(__file__))
+N=os.path.join(M,'index.html')
+def O(P):
+ if not P:return False
+ Q=P.lower()
+ return any(Q==R or Q.endswith('.'+R)for R in L)
 class S(BaseHTTPRequestHandler):
  def log_message(self,format,*args):
   if G:print(f"[{self.log_date_time_string()}]{format%args}")
  def do_GET(self):
   if self.path=='/':
-   self.send_response(200)
-   self.send_header('Content-type','text/html')
-   self.end_headers()
-   self.wfile.write(b'<!DOCTYPE html><html><head><title>WS</title></head><body><h1>Proxy</h1></body></html>')
+   try:
+    with open(N,'r',encoding='utf-8')as f:self.wfile.write(f.read().encode('utf-8'))
+   except:
+    self.send_response(200);self.send_header('Content-type','text/html');self.end_headers()
+    self.wfile.write(b'<html><body><h1>Site</h1></body></html>')
   elif f'/{C}'in self.path:
-   self.send_response(200)
-   self.send_header('Content-type','text/plain')
-   self.end_headers()
+   self.send_response(200);self.send_header('Content-type','text/plain');self.end_headers()
    T=D or K
    U=f"vless://{A}@{H}:{I}?encryption=none&security={J}&sni={H}&fp=chrome&type=ws&host={H}&path=%2F{E}#{T}"
    V=f"trojan://{A}@{H}:{I}?security={J}&sni={H}&fp=chrome&type=ws&host={H}&path=%2F{E}#{T}"
@@ -45,9 +41,7 @@ class S(BaseHTTPRequestHandler):
    Z=f"{U}\n{V}\n{Y}"
    self.wfile.write((base64.b64encode(Z.encode()).decode()+'\n').encode())
   else:
-   self.send_response(404)
-   self.end_headers()
-   self.wfile.write(b'Not Found')
+   self.send_response(404);self.end_headers();self.wfile.write(b'Not Found')
  def do_POST(self):self.do_GET()
 class T(ThreadingMixIn,HTTPServer):daemon_threads=True
 def run():
