@@ -1,136 +1,61 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-VLESS/Trojan/Shadowsocks WebSocket Proxy
-使用标准库，无需额外依赖
-"""
-
-import os
-import sys
-import socket
-import struct
-import hashlib
-import base64
-import threading
-from http.server import HTTPServer, BaseHTTPRequestHandler
+import os,sys,socket,struct,hashlib,base64,threading
+from http.server import HTTPServer,BaseHTTPRequestHandler
 from socketserver import ThreadingMixIn
-
-# ============== 配置 ==============
-UUID = os.environ.get('UUID', '7bd180e8-1142-4387-93f5-03e8d750a896')
-DOMAIN = os.environ.get('DOMAIN', '')
-SUB_PATH = os.environ.get('SUB_PATH', 'sub')
-NAME = os.environ.get('NAME', '')
-WSPATH = os.environ.get('WSPATH', UUID[:8])
-PORT = int(os.environ.get('PORT') or os.environ.get('SERVER_PORT') or 8080)
-DEBUG = os.environ.get('DEBUG', '').lower() == 'true'
-
-# ============== 全局变量 ==============
-CurrentDomain = DOMAIN or 'your-domain.com'
-CurrentPort = 443
-Tls = 'tls' if DOMAIN else 'none'
-ISP = 'Unknown'
-
-# 屏蔽的测速域名
-BLOCKED_DOMAINS = ['speedtest.net', 'fast.com', 'librespeed.org']
-
-
-def is_blocked_domain(host):
-    if not host:
-        return False
-    host_lower = host.lower()
-    return any(host_lower == b or host_lower.endswith('.' + b) for b in BLOCKED_DOMAINS)
-
-
-def resolve_host(host):
-    """简单 DNS 解析"""
-    try:
-        socket.inet_aton(host)
-        return host
-    except:
-        pass
-    try:
-        return socket.gethostbyname(host)
-    except:
-        return host
-
-
-class ProxyHandler(BaseHTTPRequestHandler):
-    """HTTP 处理"""
-    
-    def log_message(self, format, *args):
-        if DEBUG:
-            print(f"[{self.log_date_time_string()}] {format % args}")
-    
-    def do_GET(self):
-        if self.path == '/':
-            self.send_response(200)
-            self.send_header('Content-type', 'text/html')
-            self.end_headers()
-            response = b'''<!DOCTYPE html>
-<html><head><title>Python WS Proxy</title></head>
-<body><h1>Python WS Proxy</h1>
-<p>VLESS + Trojan + Shadowsocks</p>
-<p>Subscription: /sub</p>
-</body></html>'''
-            self.wfile.write(response)
-        
-        elif f'/{SUB_PATH}' in self.path:
-            self.send_response(200)
-            self.send_header('Content-type', 'text/plain')
-            self.end_headers()
-            
-            name_part = NAME or ISP
-            
-            vless_url = f"vless://{UUID}@{CurrentDomain}:{CurrentPort}?encryption=none&security={Tls}&sni={CurrentDomain}&fp=chrome&type=ws&host={CurrentDomain}&path=%2F{WSPATH}#{name_part}"
-            trojan_url = f"trojan://{UUID}@{CurrentDomain}:{CurrentPort}?security={Tls}&sni={CurrentDomain}&fp=chrome&type=ws&host={CurrentDomain}&path=%2F{WSPATH}#{name_part}"
-            
-            ss_method_password = base64.b64encode(f"none:{UUID}".encode()).decode()
-            ss_tls = 'tls;' if Tls == 'tls' else ''
-            ss_url = f"ss://{ss_method_password}@{CurrentDomain}:{CurrentPort}?plugin=v2ray-plugin;mode%3Dwebsocket;host%3D{CurrentDomain};path%3D%2F{WSPATH};{ss_tls}sni%3D{CurrentDomain};skip-cert-verify%3Dtrue;mux%3D0#{name_part}"
-            
-            subscription = f"{vless_url}\n{trojan_url}\n{ss_url}"
-            base64_content = base64.b64encode(subscription.encode()).decode()
-            
-            self.wfile.write((base64_content + '\n').encode())
-        
-        else:
-            self.send_response(404)
-            self.end_headers()
-            self.wfile.write(b'Not Found')
-    
-    def do_POST(self):
-        self.do_GET()
-
-
-class ThreadingHTTPServer(ThreadingMixIn, HTTPServer):
-    """多线程 HTTP 服务器"""
-    daemon_threads = True
-
-
-def run_server():
-    global CurrentDomain, CurrentPort, Tls
-    
-    # 设置域名
-    if not DOMAIN:
-        CurrentDomain = 'your-domain.com'
-        Tls = 'none'
-        CurrentPort = PORT
-    else:
-        CurrentDomain = DOMAIN
-        Tls = 'tls'
-        CurrentPort = 443
-    
-    server = ThreadingHTTPServer(('0.0.0.0', PORT), ProxyHandler)
-    print(f"Server running on port {PORT}")
-    print(f"WebSocket path: /{WSPATH}")
-    print(f"Subscription: /{SUB_PATH}")
-    print(f"Domain: {CurrentDomain}")
-    
-    try:
-        server.serve_forever()
-    except KeyboardInterrupt:
-        print("\nServer stopped")
-
-
-if __name__ == '__main__':
-    run_server()
+A=os.environ.get('UUID','7bd180e8-1142-4387-93f5-03e8d750a896')
+B=os.environ.get('DOMAIN','')
+C=os.environ.get('SUB_PATH','sub')
+D=os.environ.get('NAME','')
+E=os.environ.get('WSPATH',A[:8])
+F=int(os.environ.get('PORT')or os.environ.get('SERVER_PORT')or 8080)
+G=os.environ.get('DEBUG','').lower()=='true'
+H=B or'your-domain.com'
+I=443
+J='tls'if B else'none'
+K='Unknown'
+L=['speedtest.net','fast.com','librespeed.org']
+def M(N):
+ if not N:return False
+ O=N.lower()
+ return any(O==P or O.endswith('.'+P)for P in L)
+def Q(R):
+ try:socket.inet_aton(R);return R
+ except:pass
+ try:return socket.gethostbyname(R)
+ except:return R
+class S(BaseHTTPRequestHandler):
+ def log_message(self,format,*args):
+  if G:print(f"[{self.log_date_time_string()}]{format%args}")
+ def do_GET(self):
+  if self.path=='/':
+   self.send_response(200)
+   self.send_header('Content-type','text/html')
+   self.end_headers()
+   self.wfile.write(b'<!DOCTYPE html><html><head><title>WS</title></head><body><h1>Proxy</h1></body></html>')
+  elif f'/{C}'in self.path:
+   self.send_response(200)
+   self.send_header('Content-type','text/plain')
+   self.end_headers()
+   T=D or K
+   U=f"vless://{A}@{H}:{I}?encryption=none&security={J}&sni={H}&fp=chrome&type=ws&host={H}&path=%2F{E}#{T}"
+   V=f"trojan://{A}@{H}:{I}?security={J}&sni={H}&fp=chrome&type=ws&host={H}&path=%2F{E}#{T}"
+   W=base64.b64encode(f"none:{A}".encode()).decode()
+   X='tls;'if J=='tls'else''
+   Y=f"ss://{W}@{H}:{I}?plugin=v2ray-plugin;mode%3Dwebsocket;host%3D{H};path%3D%2F{E};{X}sni%3D{H};skip-cert-verify%3Dtrue;mux%3D0#{T}"
+   Z=f"{U}\n{V}\n{Y}"
+   self.wfile.write((base64.b64encode(Z.encode()).decode()+'\n').encode())
+  else:
+   self.send_response(404)
+   self.end_headers()
+   self.wfile.write(b'Not Found')
+ def do_POST(self):self.do_GET()
+class T(ThreadingMixIn,HTTPServer):daemon_threads=True
+def run():
+ global H,I,J
+ if not B:H='your-domain.com';J='none';I=F
+ else:H=B;J='tls';I=443
+ S1=T(('0.0.0.0',F),S)
+ print(f"Port:{F}");print(f"Path:/{E}");print(f"Sub:/{C}");print(f"Domain:{H}")
+ try:S1.serve_forever()
+ except KeyboardInterrupt:print("\nStop")
+if __name__=='__main__':run()
